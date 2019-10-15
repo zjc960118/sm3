@@ -22,7 +22,7 @@
 #define TT1(e,f,g,a,b,c,d) ((e)+(f)+SS2(a,b,c,d)+(g))
 #define TT2(e,f,g,a,b,c,d) ((e)+(f)+SS1(a,b,c,d)+(g))
 
-unsigned long H[8]={0x7380166f,0x4914b2b9,0x172442d7,0xda8a0600,0xa96f30bc,0x163138aa,0xe38dee4d,0xb0fb0e4e};
+unsigned long H[8]={0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};
 
 void print_str(unsigned char*str,int len){
     int i=0;
@@ -196,22 +196,41 @@ void sm3_str_summ(unsigned char*str,unsigned char*summ,int len){
 
 int main()
 {
-    unsigned char str[64*8*8]={0};
-    int i=0;
-    int len=0;
-    printf("请输入已知消息长度（字节长度）：");
-    scanf("%d",&len);
-    unsigned char str_sm3[32];
-    printf("请输入已知消息（16进制）：");
+    int i=0,len;
+	printf("ÇëÊäÈëÒÑÖªÏûÏ¢³¤¶È£¨×Ö½Ú³¤¶È£©£º");
+	scanf("%d",&len);
+	unsigned char message[64*8*8];
+    printf("ÇëÊäÈëÒÑÖªÏûÏ¢£¨Ê®Áù½øÖÆ£©£º");
     for(i=0;i<len;i++)
-		scanf("%2x",&str[i]);
-    len=sm3_pad_message(str,len);
-//    print_str(str,len);
-    len = sm3_str_group(str,len);
-//    print_str(str, len);
-    sm3_str_summ(str, str_sm3, len);
-//    print_str(str, len);
-    printf("哈希值为：");
+		scanf("%2x",&message[i]);
+    len=sm3_pad_message(message,len);
+    unsigned char newMessage[64*8*8];
+    unsigned char attachMessage[64];
+	for(i=0;i<len;i++)
+		newMessage[i]=message[i];
+	strcat(newMessage+len,"already hacked!");
+	printf("³¤¶ÈÀ©Õ¹¹¥»÷ÏûÏ¢£º");
+	for(i=0;i<len+15;i++)
+		printf("%02x",newMessage[i]);
+	printf("\nÏûÏ¢³¤¶ÈÎª£¨×Ö½Ú³¤¶È£©£º%d\n",len+15);
+	printf("ÇëÊäÈëÒÑÖª¹þÏ£Öµ£º");
+	unsigned char hashValue[32];
+	for(i=0;i<32;i++)
+		scanf("%2x",&hashValue[i]);
+    unsigned char str[64*8*8]={0};
+    unsigned char str_sm3[32];
+    for(i=0;i<32;i++)
+		H[i/4]+=(unsigned long)hashValue[i]<<(3-i%4)*8;
+    len=sm3_pad_message(newMessage,len+15);
+    for(i=0;i<64;i++)
+		attachMessage[i]=newMessage[len-64+i];
+	len=64;
+//    print_str(attachMessage,len);
+    len=sm3_str_group(attachMessage,len);
+//    print_str(attachMessage,len);
+    sm3_str_summ(attachMessage, str_sm3,len);
+	printf("Éú³É¹þÏ£Öµ£º");
+//    print_str(attachMessage,len);
     print_str(str_sm3, 32);
     return 0;
 }
