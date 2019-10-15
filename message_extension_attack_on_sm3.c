@@ -197,10 +197,10 @@ void sm3_str_summ(unsigned char*str,unsigned char*summ,int len){
 int main()
 {
     int i=0,len;
-	printf("ÇëÊäÈëÒÑÖªÏûÏ¢³¤¶È£¨×Ö½Ú³¤¶È£©£º");
+	printf("请输入已知消息长度（字节长度）：");
 	scanf("%d",&len);
 	unsigned char message[64*8*8];
-    printf("ÇëÊäÈëÒÑÖªÏûÏ¢£¨Ê®Áù½øÖÆ£©£º");
+    printf("请输入已知消息（十六进制）：");
     for(i=0;i<len;i++)
 		scanf("%2x",&message[i]);
     len=sm3_pad_message(message,len);
@@ -209,11 +209,11 @@ int main()
 	for(i=0;i<len;i++)
 		newMessage[i]=message[i];
 	strcat(newMessage+len,"already hacked!");
-	printf("³¤¶ÈÀ©Õ¹¹¥»÷ÏûÏ¢£º");
+	printf("长度扩展攻击消息：");
 	for(i=0;i<len+15;i++)
 		printf("%02x",newMessage[i]);
-	printf("\nÏûÏ¢³¤¶ÈÎª£¨×Ö½Ú³¤¶È£©£º%d\n",len+15);
-	printf("ÇëÊäÈëÒÑÖª¹þÏ£Öµ£º");
+	printf("\n消息长度为（字节长度）：%d\n",len+15);
+	printf("请输入已知哈希值：");
 	unsigned char hashValue[32];
 	for(i=0;i<32;i++)
 		scanf("%2x",&hashValue[i]);
@@ -229,7 +229,7 @@ int main()
     len=sm3_str_group(attachMessage,len);
 //    print_str(attachMessage,len);
     sm3_str_summ(attachMessage, str_sm3,len);
-	printf("Éú³É¹þÏ£Öµ£º");
+	printf("生成哈希值：");
 //    print_str(attachMessage,len);
     print_str(str_sm3, 32);
     return 0;
