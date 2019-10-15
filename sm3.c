@@ -199,10 +199,10 @@ int main()
     unsigned char str[64*8*8]={0};
     int i=0;
     int len=0;
-    printf("请输入已知消息长度（字节长度）：");
+    printf("请输入消息长度（字节长度）：");
     scanf("%d",&len);
     unsigned char str_sm3[32];
-    printf("请输入已知消息（16进制）：");
+    printf("请输入消息（十六进制）：");
     for(i=0;i<len;i++)
 		scanf("%2x",&str[i]);
     len=sm3_pad_message(str,len);
@@ -215,3 +215,4 @@ int main()
     print_str(str_sm3, 32);
     return 0;
 }
+
